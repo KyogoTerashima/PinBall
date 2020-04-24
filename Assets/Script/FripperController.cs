@@ -28,6 +28,9 @@ public class FripperController : MonoBehaviour {
         
 	}
 
+    private int leftid = -1;
+    private int rightid = -1;
+
     // Update is called once per frame
     void Update()
     {
@@ -81,25 +84,33 @@ public class FripperController : MonoBehaviour {
                 // タッチした座標に応じて左右のフリッパーを上下する
                 if(t.position.x < Screen.width / 2.0f)
                 {
-                    if(tag == "LeftFripperTag")
+                    if(tag == "LeftFripperTag" && leftid == -1)
                     {
-
-                    SetAngle(this.flickAngle);
+                        leftid = t.fingerId;
+                        SetAngle(this.flickAngle);
                     }
                 }
                 else
                 {
-                    if(tag == "RightFripperTag")
+                    if(tag == "RightFripperTag" && rightid == -1)
                     {
-
-                    SetAngle(this.flickAngle);
+                        rightid = t.fingerId;
+                        SetAngle(this.flickAngle);
                     }
                 }
             }
             else if (t.phase == TouchPhase.Ended)
             {
                 // 離した時
-                SetAngle(this.defaultAngle);
+                if(t.fingerId == leftid && tag == "LeftFripperTag")
+                {
+                    leftid = -1;
+                    SetAngle(this.defaultAngle);
+                }else if(t.fingerId == rightid && tag == "RightFripperTag")
+                {
+                    SetAngle(this.defaultAngle);
+                    rightid = -1;
+                }
             }
 
 
